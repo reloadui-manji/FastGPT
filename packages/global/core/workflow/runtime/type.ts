@@ -76,7 +76,7 @@ export type ChatDispatchProps = {
   isToolCall?: boolean;
   workflowStreamResponse?: WorkflowResponseType;
   apiVersion?: 'v1' | 'v2';
-
+  deepThink: boolean;
   workflowDispatchDeep: number;
 
   responseAllData?: boolean;

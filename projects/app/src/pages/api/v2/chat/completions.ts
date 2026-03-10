@@ -85,6 +85,7 @@ export type Props = ChatCompletionCreateParams &
   OutLinkChatAuthProps & {
     messages: ChatCompletionMessageParam[];
     responseChatItemId?: string;
+    deepThink?: boolean;
     stream?: boolean;
     detail?: boolean;
     retainDatasetCite?: boolean;
@@ -115,7 +116,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
     // team chat
     teamId: spaceTeamId,
     teamToken,
-
+    deepThink = false,
     stream = false,
     detail = false,
     retainDatasetCite = false,
@@ -150,7 +151,6 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
       // plugin
       return JSON.stringify(variables);
     })();
-
     /*
       1. auth app permission
       2. auth balance
@@ -237,7 +237,6 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
       }
       return latestHumanChat;
     })();
-
     // Get and concat history;
     const limit = getMaxHistoryLimitFromNodes(app.modules);
     const [{ histories }, { versionId, nodes, edges, chatConfig }, chatDetail] = await Promise.all([
@@ -301,7 +300,6 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
           lang: getLocale(req),
           requestOrigin: req.headers.origin,
           mode: 'chat',
-
           usageSource: getUsageSourceByAuthType({ shareId, authType }),
           runningAppInfo: {
             id: String(app._id),
@@ -311,7 +309,6 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
           },
           runningUserInfo: await getRunningUserInfoByTmbId(tmbId),
           uid: String(outLinkUserId || tmbId),
-
           chatId: saveChatId,
           responseChatItemId,
           runtimeNodes,
@@ -322,6 +319,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
           chatConfig,
           histories: newHistories,
           stream,
+          deepThink,
           retainDatasetCite,
           maxRunTimes: WORKFLOW_MAX_RUN_TIMES,
           workflowStreamResponse: workflowResponseWrite,

@@ -1,5 +1,5 @@
 import type { FlexProps } from '@chakra-ui/react';
-import { Box, Flex, Textarea, useBoolean } from '@chakra-ui/react';
+import { Box, Flex, Textarea, useBoolean, Text, Switch } from '@chakra-ui/react';
 import React, { useRef, useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'next-i18next';
 import MyTooltip from '@fastgpt/web/components/common/MyTooltip';
@@ -71,6 +71,7 @@ const ChatInput = ({
   const fileSelectConfig = useContextSelector(ChatBoxContext, (v) => v.fileSelectConfig);
   const dialogTips = useContextSelector(ChatBoxContext, (v) => v.dialogTips);
   const autoTTSResponse = useContextSelector(ChatBoxContext, (v) => v.autoTTSResponse);
+  const [deepThink, setDeepThink] = useState(false);
 
   const fileCtrl = useFieldArray({
     control,
@@ -122,6 +123,7 @@ const ChatInput = ({
       const textareaValue = val || TextareaDom.current?.value || '';
 
       onSendMessage({
+        deepThink: deepThink,
         text: textareaValue.trim(),
         files: fileList,
         interactive: lastInteractive
@@ -286,6 +288,20 @@ const ChatInput = ({
       >
         {/* 左侧自定义按钮组 */}
         <Flex alignItems={'center'} gap={2} flex={'1 0 0'} w={0}>
+          <Flex align="center" gap={2}>
+            <Text fontSize="sm" color="gray.500">
+              深度思考
+            </Text>
+            <Switch
+              size="sm"
+              colorScheme="purple"
+              isChecked={deepThink}
+              onChange={(e) => {
+                const value = e.target.checked;
+                setDeepThink(value);
+              }}
+            />
+          </Flex>
           {InputLeftComponent}
         </Flex>
 
@@ -397,7 +413,8 @@ const ChatInput = ({
     onOpenSelectFile,
     onSelectFile,
     handleSend,
-    handleStop
+    handleStop,
+    deepThink
   ]);
 
   const activeStyles: FlexProps = {
@@ -478,6 +495,7 @@ const ChatInput = ({
               ref={VoiceInputRef}
               handleSend={(text) => {
                 onSendMessage({
+                  deepThink: deepThink,
                   text: text.trim(),
                   files: fileList,
                   autoTTSResponse
@@ -487,6 +505,7 @@ const ChatInput = ({
               resetInputVal={(val) => {
                 setMobilePreSpeak(false);
                 resetInputVal({
+                  deepThink: deepThink,
                   text: val,
                   files: fileList
                 });

@@ -512,7 +512,8 @@ const ChatBox = ({
       history = chatRecords,
       interactive,
       autoTTSResponse = false,
-      hideInUI = false
+      hideInUI = false,
+      deepThink = false
     }) => {
       variablesForm.handleSubmit(
         async ({ variables = {} }) => {
@@ -656,6 +657,7 @@ const ChatBox = ({
             });
 
             const { responseText } = await onStartChat({
+              deepThink,
               messages,
               responseChatItemId: responseChatId,
               controller: abortSignal,

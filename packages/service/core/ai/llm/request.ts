@@ -263,6 +263,7 @@ export const createLLMResponse = async <T extends CompletionsBodyType>(
     const outputTokens =
       usage?.completion_tokens || (await countGptMessagesTokens([assistantMessage]));
 
+    // console.log('requestBody', requestBody);
     // 异步保存 LLM 请求追踪记录
     saveLLMRequestRecord({
       requestId,
@@ -673,9 +674,13 @@ export const createCompleteResponse = async ({
   };
 };
 
+type ExtraType = {
+  deep_think: boolean;
+};
 type CompletionsBodyType =
   | ChatCompletionCreateParamsNonStreaming
-  | ChatCompletionCreateParamsStreaming;
+  | ChatCompletionCreateParamsStreaming
+  | ExtraType;
 type InferCompletionsBody<T> = T extends { stream: true }
   ? ChatCompletionCreateParamsStreaming
   : T extends { stream: false }
@@ -685,6 +690,7 @@ type InferCompletionsBody<T> = T extends { stream: true }
 type LLMRequestBodyType<T> = Omit<T, 'model' | 'stop' | 'response_format' | 'messages'> & {
   model: string | LLMModelItemType;
   stop?: string;
+  deep_think: boolean;
   response_format?: {
     type?: string;
     json_schema?: string;
@@ -701,7 +707,6 @@ const llmCompletionsBodyFormat = async <T extends CompletionsBodyType>({
   retainDatasetCite,
   useVision,
   requestOrigin,
-
   tools,
   tool_choice,
   parallel_tool_calls,
@@ -800,7 +805,7 @@ const createChatCompletion = async ({
   options
 }: {
   modelData: LLMModelItemType;
-  body: ChatCompletionCreateParamsNonStreaming | ChatCompletionCreateParamsStreaming;
+  body: CompletionsBodyType;
   userKey?: OpenaiAccountType;
   timeout?: number;
   options?: OpenAI.RequestOptions;

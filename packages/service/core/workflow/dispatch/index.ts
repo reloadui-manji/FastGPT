@@ -91,6 +91,7 @@ export async function dispatchWorkFlow({
   const {
     res,
     stream,
+    deepThink,
     runningUserInfo,
     runningAppInfo,
     lastInteractive,
@@ -487,6 +488,7 @@ export const runWorkflow = async (data: RunWorkflowProps): Promise<DispatchFlowR
       runStatus: 'run';
       result: NodeResponseCompleteType;
     }> {
+      /* Inject data into module input */
       /* Inject data into module input */
       function getNodeRunParams(node: RuntimeNodeItemType) {
         if (node.flowNodeType === FlowNodeTypeEnum.pluginInput) {

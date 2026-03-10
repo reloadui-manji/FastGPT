@@ -94,6 +94,7 @@ const AppChatWindow = () => {
 
   const onStartChat = useCallback(
     async ({
+      deepThink,
       messages,
       variables,
       controller,
@@ -103,6 +104,7 @@ const AppChatWindow = () => {
       const histories = messages.slice(-1);
       const { responseText } = await streamFetch({
         data: {
+          deepThink,
           messages: histories,
           variables,
           responseChatItemId,

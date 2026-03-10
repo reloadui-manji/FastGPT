@@ -66,6 +66,7 @@ export const dispatchChatCompletion = async (props: ChatProps): Promise<ChatResp
     checkIsStopping,
     requestOrigin,
     stream = false,
+    deepThink = false,
     retainDatasetCite = true,
     externalProvider,
     histories,
@@ -174,6 +175,8 @@ export const dispatchChatCompletion = async (props: ChatProps): Promise<ChatResp
       })()
     ]);
 
+    console.log('deepThink', deepThink);
+
     const {
       completeMessages,
       reasoningText,
@@ -188,6 +191,7 @@ export const dispatchChatCompletion = async (props: ChatProps): Promise<ChatResp
       body: {
         model: modelConstantsData.model,
         stream,
+        deep_think: deepThink,
         messages: filterMessages,
         temperature,
         max_tokens,

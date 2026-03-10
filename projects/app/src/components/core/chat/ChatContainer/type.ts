@@ -38,6 +38,7 @@ export type generatingMessageProps = {
 };
 
 export type StartChatFnProps = {
+  deepThink: boolean;
   messages: ChatCompletionMessageParam[];
   responseChatItemId?: string;
   controller: AbortController;
