@@ -31,6 +31,7 @@ export type ChatBoxInputType = {
   files?: UserInputFileItemType[];
   interactive?: WorkflowInteractiveResponseType;
   hideInUI?: boolean;
+  deepThink?: boolean;
 };
 
 export type SendPromptFnType = (

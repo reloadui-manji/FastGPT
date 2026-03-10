@@ -4,6 +4,7 @@ import type {
   ChatCompletionCreateParamsStreaming,
   ChatCompletionMessageParam,
   ChatCompletionMessageToolCall,
+  ChatCompletionTool,
   CompletionFinishReason,
   CompletionUsage,
   OpenAI,
@@ -676,6 +677,8 @@ export const createCompleteResponse = async ({
 
 type ExtraType = {
   deep_think: boolean;
+  model: string | LLMModelItemType;
+  top_p: number;
 };
 type CompletionsBodyType =
   | ChatCompletionCreateParamsNonStreaming
@@ -690,7 +693,14 @@ type InferCompletionsBody<T> = T extends { stream: true }
 type LLMRequestBodyType<T> = Omit<T, 'model' | 'stop' | 'response_format' | 'messages'> & {
   model: string | LLMModelItemType;
   stop?: string;
-  deep_think: boolean;
+  deep_think?: boolean;
+  temperature?: number;
+  max_tokens?: number;
+  stream?: boolean;
+  tool_choice?: any;
+  parallel_tool_calls?: boolean;
+  tool_p?: number;
+  tools?: ChatCompletionTool[];
   response_format?: {
     type?: string;
     json_schema?: string;
@@ -805,7 +815,7 @@ const createChatCompletion = async ({
   options
 }: {
   modelData: LLMModelItemType;
-  body: CompletionsBodyType;
+  body: ChatCompletionCreateParamsNonStreaming | ChatCompletionCreateParamsStreaming;
   userKey?: OpenaiAccountType;
   timeout?: number;
   options?: OpenAI.RequestOptions;
